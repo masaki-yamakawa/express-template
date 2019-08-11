@@ -9,6 +9,12 @@ import router from "./routes/index";
 
 const app = express();
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+app.disable("x-powered-by");
 app.use(bodyParser.json());
 app.use("/app", express.static(path.join(__dirname, "public")));
 app.use("/api/v1", router);
