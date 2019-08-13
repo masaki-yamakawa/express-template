@@ -55,13 +55,15 @@ export class DBConnectionManager {
         return await promisify(this.databases[connName].status).bind(this.databases[connName])();
     }
 
-    public async getConnection(connName: string = "default"): Promise<ConnectionWrapper> {
+    public async getConnection(connName: string = "default", autoCommit: boolean = false): Promise<ConnectionWrapper> {
         if (!this.isInitialized(connName)) {
             throw new Error(`DBConnectionManager not initialized. ConnName=${connName}`);
         }
         const connection = await promisify(this.databases[connName].reserve).bind(this.databases[connName])();
-        console.log(`Using connection=${connection.uuid}`);
-        return new ConnectionWrapper(connection);
+        const connWrapper: ConnectionWrapper = new ConnectionWrapper(connection);
+        connWrapper.setAutoCommit(autoCommit);
+        console.log(`Using connection=${connWrapper.getUuid()}, autoCommit=${autoCommit}`);
+        return connWrapper;
     }
 
     public async releaseConnection(connection: ConnectionWrapper, connName: string = "default"): Promise<void> {
@@ -70,8 +72,9 @@ export class DBConnectionManager {
         }
         if (connection) {
             const uuid = connection.getUuid();
+            const autoCommit = connection.getAutoCommit();
             await promisify(this.databases[connName].release).bind(this.databases[connName])(connection.getConnection());
-            console.log(`Release connection=${uuid}`);
+            console.log(`Release connection=${uuid}, autoCommit=${autoCommit}`);
         }
     }
 
