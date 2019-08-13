@@ -72,8 +72,9 @@ export class DBConnectionManager {
         }
         if (connection) {
             const uuid = connection.getUuid();
+            const autoCommit = connection.getAutoCommit();
             await promisify(this.databases[connName].release).bind(this.databases[connName])(connection.getConnection());
-            console.log(`Release connection=${uuid}`);
+            console.log(`Release connection=${uuid}, autoCommit=${autoCommit}`);
         }
     }
 
