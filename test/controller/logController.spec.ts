@@ -1,5 +1,5 @@
 import { postLogs } from "../../src/controller/logController";
-import { Log } from "../../src/protocol/log";
+import { LogRequest } from "../../src/protocol/logProtocol";
 import { mockPostRequest as mockRequest, mockResponse } from "../mockRequestResponse";
 
 describe("postLogs", () => {
@@ -14,7 +14,7 @@ describe("postLogs", () => {
     });
 
     it("should return empty object and call log function for array length times:array lenght=3", async () => {
-        const logs: Log[] = [
+        const logs: LogRequest[] = [
             {
                 count: 1,
                 level: 40,
@@ -61,7 +61,7 @@ describe("postLogs", () => {
     });
 
     it("should return empty object and call log function for array length times:array lenght=1", async () => {
-        const logs: Log[] = [
+        const logs: LogRequest[] = [
             {
                 count: 1,
                 level: 40,
@@ -84,7 +84,7 @@ describe("postLogs", () => {
     });
 
     it("should return empty object and call log function for array length times:empty array", async () => {
-        const logs: Log[] = [];
+        const logs: LogRequest[] = [];
         const req: any = mockRequest(logs);
         const res: any = mockResponse();
 

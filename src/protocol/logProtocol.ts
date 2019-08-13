@@ -1,4 +1,4 @@
-export interface Log {
+export interface LogRequest {
     count: number;
     level: number;
     levelName: string;
