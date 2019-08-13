@@ -26,4 +26,16 @@ export class ConnectionWrapper {
     public async setAutoCommit(autoCommit: boolean): Promise<void> {
         await promisify(this.connection.setAutoCommit).bind(this.connection)(autoCommit);
     }
+
+    public async getAutoCommit(): Promise<boolean> {
+        return await promisify(this.connection.getAutoCommit).bind(this.connection)();
+    }
+
+    public async getWarnings(): Promise<any> {
+        return await promisify(this.connection.getWarnings).bind(this.connection)();
+    }
+
+    public async clearWarnings(): Promise<void> {
+        await promisify(this.connection.clearWarnings).bind(this.connection)();
+    }
 }
