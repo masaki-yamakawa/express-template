@@ -16,6 +16,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 app.disable("x-powered-by");
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/app", express.static(path.join(__dirname, "public")));
 app.use("/api/v1", router);
 
