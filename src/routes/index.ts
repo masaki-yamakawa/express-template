@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { echoMessage } from "../controller/echoMessage";
 import { jdbcSelect } from "../controller/jdbcAccess";
+import { postLogs } from "../controller/logController";
 import { asyncHandler } from "../handler/asyncHandler";
 
 const router = express.Router();
@@ -13,5 +14,6 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
 router.get("/echo", asyncHandler(echoMessage));
 router.get("/jdbc", asyncHandler(jdbcSelect));
 router.post("/jdbc", asyncHandler(jdbcSelect));
+router.post("/log", asyncHandler(postLogs));
 
 export default router;
