@@ -5,6 +5,7 @@ import * as listEndpoints from "express-list-endpoints";
 import * as createError from "http-errors";
 import * as path from "path";
 
+import { Logger } from "./logger/logger";
 import router from "./routes/index";
 
 const app = express();
@@ -30,7 +31,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json(err.message);
 });
 
-console.log(listEndpoints(app));
+Logger.getLogger().info(listEndpoints(app));
 
 // export default app;
 module.exports = app;

@@ -4,11 +4,12 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import { ConnectionWrapper } from "../dbutil/connectionWrapper";
 import { DBConnectionManager } from "../dbutil/dbConnectionManager";
 import { DBQueryRunner } from "../dbutil/dbQueryRunner";
+import { Logger } from "../logger/logger";
 
 export const jdbcSelect: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const sql: string = req.query.sql;
     const args: string[] = req.query;
-    console.log(`REST Args=${JSON.stringify(args)}`);
+    Logger.getLogger().info(`REST Args=${JSON.stringify(args)}`);
 
     const dbConfig: any = config.get(`jdbcConfig.dbConfig.default`);
     const connManager: DBConnectionManager = DBConnectionManager.getInstance();

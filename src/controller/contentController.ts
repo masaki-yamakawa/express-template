@@ -4,11 +4,13 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import { ConnectionWrapper } from "../dbutil/connectionWrapper";
 import { DBConnectionManager } from "../dbutil/dbConnectionManager";
 import { DBQueryRunner } from "../dbutil/dbQueryRunner";
+import { Content } from "../entity/content";
+import { Logger } from "../logger/logger";
 import { ContentCondition } from "../protocol/contentProtocol";
 
 export const getContents: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const condition: ContentCondition = req.query as ContentCondition;
-    console.log(`REST Args=${JSON.stringify(condition)}`);
+    Logger.getLogger().info(`REST Args=${JSON.stringify(condition)}`);
 
     const dbConfig: any = config.get(`jdbcConfig.dbConfig.default`);
     const connManager: DBConnectionManager = DBConnectionManager.getInstance();
@@ -21,7 +23,7 @@ export const getContents: RequestHandler = async (req: Request, res: Response, n
         conn = await connManager.getConnection();
         const dbQueryRunner = new DBQueryRunner(conn);
         const sqlAndCond: [string, Map<string, any>] = buildSql(condition);
-        const results = await dbQueryRunner.query(sqlAndCond[0], sqlAndCond[1]);
+        const results: Content[] = await dbQueryRunner.query(sqlAndCond[0], sqlAndCond[1]);
         res.json(results);
     } catch (err) {
         throw new Error(`getContents failed:${err}`);
