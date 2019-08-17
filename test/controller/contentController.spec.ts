@@ -25,16 +25,19 @@ beforeAll(async () => {
         "  url   varchar(350)" +
         ")";
     await dbQueryRunner.update(sql);
+    await connection.commit();
 });
 afterAll(async () => {
     // const sql: string = "DROP TABLE IF EXISTS CONTENT";
     // await dbQueryRunner.update(sql);
+    // await connection.commit();
     await connManager.releaseConnection(connection);
 });
 
 describe("getContents: database is empty", () => {
     beforeEach(async () => {
         await dbQueryRunner.update("DELETE FROM CONTENT");
+        await connection.commit();
     });
 
     it("should return empty array if database is empty", async () => {
@@ -70,6 +73,7 @@ describe("getContents: database has rows", () => {
             const paramMap: Map<string, any> = new Map(Object.entries(content));
             await dbQueryRunner.update("INSERT INTO CONTENT(ID, TITLE, URL) VALUES(${id}, ${title}, ${url})", paramMap);
         }
+        await connection.commit();
     });
 
     it("should return all entities if condition is nothing", async () => {

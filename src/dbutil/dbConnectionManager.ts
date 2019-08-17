@@ -63,7 +63,7 @@ export class DBConnectionManager {
         }
         const connection = await promisify(this.databases[connName].reserve).bind(this.databases[connName])();
         const connWrapper: ConnectionWrapper = new ConnectionWrapper(connection);
-        connWrapper.setAutoCommit(autoCommit);
+        await connWrapper.setAutoCommit(autoCommit);
         Logger.getLogger().info(`Using connection=${connWrapper.getUuid()}, autoCommit=${autoCommit}`);
         return connWrapper;
     }
@@ -74,7 +74,10 @@ export class DBConnectionManager {
         }
         if (connection) {
             const uuid = connection.getUuid();
-            const autoCommit = connection.getAutoCommit();
+            const autoCommit = await connection.getAutoCommit();
+            if (!autoCommit) {
+                connection.commit();
+            }
             await promisify(this.databases[connName].release).bind(this.databases[connName])(connection.getConnection());
             Logger.getLogger().info(`Release connection=${uuid}, autoCommit=${autoCommit}`);
         }
