@@ -80,11 +80,11 @@ export class DBQueryRunner {
 
     public async setObject(pStmt: any, index: number, value: any): Promise<void> {
         if (typeof value === "string") {
-            promisify(pStmt.setString).bind(pStmt)(index, value);
+            await promisify(pStmt.setString).bind(pStmt)(index, value);
         } else if (typeof value === "number" && Number.isInteger(value)) {
-            promisify(pStmt.setLong).bind(pStmt)(index, value);
+            await promisify(pStmt.setLong).bind(pStmt)(index, value);
         } else if (typeof value === "number" && !Number.isInteger(value)) {
-            promisify(pStmt.setDouble).bind(pStmt)(index, value);
+            await promisify(pStmt.setDouble).bind(pStmt)(index, value);
         } else {
             throw new Error(`Unknown data type:index=${index}, value=${value}`);
         }
