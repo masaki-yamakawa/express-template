@@ -1,11 +1,12 @@
 import { postLogs } from "../../src/controller/logController";
+import { Logger } from "../../src/logger/logger";
 import { LogRequest } from "../../src/protocol/logProtocol";
 import { mockPostRequest as mockRequest, mockResponse } from "../mockRequestResponse";
 
 describe("postLogs", () => {
     let spyLog;
     beforeEach(() => {
-        spyLog = jest.spyOn(console, "log");
+        spyLog = jest.spyOn(Logger.getLogger(), "info");
         spyLog.mockImplementation((x) => x);
     });
     afterEach(() => {
@@ -53,7 +54,7 @@ describe("postLogs", () => {
         const res: any = mockResponse();
 
         await postLogs(req, res, () => { });
-        expect(console.log).toBeCalledTimes(3);
+        expect(Logger.getLogger().info).toBeCalledTimes(3);
         expect(spyLog.mock.calls[0][0]).toBe("2019/08/13 12:33:45.112 [info][app] info message");
         expect(spyLog.mock.calls[1][0]).toBe("2019/08/13 14:21:12.345 [debug][default] debug message");
         expect(spyLog.mock.calls[2][0]).toBe("2019/08/13 15:01:59.652 [error][webhook] error message");
@@ -78,7 +79,7 @@ describe("postLogs", () => {
         const res: any = mockResponse();
 
         await postLogs(req, res, () => { });
-        expect(console.log).toBeCalledTimes(1);
+        expect(Logger.getLogger().info).toBeCalledTimes(1);
         expect(spyLog.mock.calls[0][0]).toBe("2019/08/13 12:33:45.112 [info][app] info message");
         expect(res.json).toHaveBeenCalledWith({});
     });
@@ -89,7 +90,7 @@ describe("postLogs", () => {
         const res: any = mockResponse();
 
         await postLogs(req, res, () => { });
-        expect(console.log).toBeCalledTimes(0);
+        expect(Logger.getLogger().info).toBeCalledTimes(0);
         expect(res.json).toHaveBeenCalledWith({});
     });
 });

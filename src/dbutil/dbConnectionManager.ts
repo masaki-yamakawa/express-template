@@ -3,6 +3,8 @@ import * as JDBC from "jdbc";
 import * as jinst from "jdbc/lib/jinst";
 import { inspect, promisify } from "util";
 
+import { Logger } from "../logger/logger";
+
 import { ConnectionWrapper } from "./connectionWrapper";
 
 export class DBConnectionManager {
@@ -20,14 +22,14 @@ export class DBConnectionManager {
         if (!jinst.isJvmCreated()) {
             jinst.addOption("-Xrs");
             const cp: string[] = config.get<string[]>("jdbcConfig.javaclasspath");
-            console.log(`Java class path=${cp}`);
+            Logger.getLogger().info(`Java class path=${cp}`);
             jinst.setupClasspath(cp);
         }
     }
 
     public async initialize(dbConfig: any, connName: string = "default"): Promise<void> {
         if (this.isInitialized(connName)) {
-            console.warn(`DBConnectionManager already initialized. ConnName=${connName}`);
+            Logger.getLogger().warn(`DBConnectionManager already initialized. ConnName=${connName}`);
             return;
         }
 
@@ -37,7 +39,7 @@ export class DBConnectionManager {
         } catch (err) {
             throw new Error(`JDBC initialize failed. ConnName=${connName}:${err}`);
         }
-        console.log(`JDBC initialized. ConnName=${connName}, Connection=${inspect(dbConfig)}`);
+        Logger.getLogger().info(`JDBC initialized. ConnName=${connName}, Connection=${inspect(dbConfig)}`);
         this.databases[connName] = jdbc;
     }
 
@@ -62,7 +64,7 @@ export class DBConnectionManager {
         const connection = await promisify(this.databases[connName].reserve).bind(this.databases[connName])();
         const connWrapper: ConnectionWrapper = new ConnectionWrapper(connection);
         connWrapper.setAutoCommit(autoCommit);
-        console.log(`Using connection=${connWrapper.getUuid()}, autoCommit=${autoCommit}`);
+        Logger.getLogger().info(`Using connection=${connWrapper.getUuid()}, autoCommit=${autoCommit}`);
         return connWrapper;
     }
 
@@ -74,7 +76,7 @@ export class DBConnectionManager {
             const uuid = connection.getUuid();
             const autoCommit = connection.getAutoCommit();
             await promisify(this.databases[connName].release).bind(this.databases[connName])(connection.getConnection());
-            console.log(`Release connection=${uuid}, autoCommit=${autoCommit}`);
+            Logger.getLogger().info(`Release connection=${uuid}, autoCommit=${autoCommit}`);
         }
     }
 

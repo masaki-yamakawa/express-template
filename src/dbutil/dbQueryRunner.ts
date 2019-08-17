@@ -1,5 +1,7 @@
 import { inspect, promisify } from "util";
 
+import { Logger } from "../logger/logger";
+
 import { ConnectionWrapper } from "./connectionWrapper";
 import { DefaultResultSetHandler, ResultSetHandler } from "./resultSetHandler";
 
@@ -38,11 +40,11 @@ export class DBQueryRunner {
             }
         }
 
-        console.log(`SQL=${preparedSql}, Params=${params === null ? null : JSON.stringify([...params])}, FetchSize=${fetchSize}`);
+        Logger.getLogger().info(`SQL=${preparedSql}, Params=${params === null ? null : JSON.stringify([...params])}, FetchSize=${fetchSize}`);
 
         const resultSet = await promisify(statement.executeQuery).bind(statement)();
         const results = await handler.handle(resultSet);
-        console.log(`Count=${results.length}, Results=${inspect(results)}`);
+        Logger.getLogger().info(`Count=${results.length}, Results=${inspect(results)}`);
         return results;
     }
 
@@ -69,10 +71,10 @@ export class DBQueryRunner {
             }
         }
 
-        console.log(`SQL=${preparedSql}, Params=${params === null ? null : JSON.stringify([...params])}`);
+        Logger.getLogger().info(`SQL=${preparedSql}, Params=${params === null ? null : JSON.stringify([...params])}`);
 
         const result: number = await promisify(statement.executeUpdate).bind(statement)();
-        console.log(`UpdateCount=${result}`);
+        Logger.getLogger().info(`UpdateCount=${result}`);
         return result;
     }
 

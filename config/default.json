@@ -16,5 +16,15 @@
                 "properties": {}
             }
         }
+    },
+    "logConfig": {
+        "console": {
+            "level": "debug"
+        },
+        "file": {
+            "level": "debug",
+            "fileName": "logs/express-template.log",
+            "keepCount": 3
+        }
     }
 }

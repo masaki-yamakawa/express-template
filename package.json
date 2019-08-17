@@ -10,6 +10,8 @@
         "test": "jest --coverage --runInBand"
     },
     "dependencies": {
+        "bunyan": "^1.8.12",
+        "bunyan-format": "^0.2.1",
         "config": "^3.2.2",
         "express": "~4.16.1",
         "express-list-endpoints": "^4.0.1",

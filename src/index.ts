@@ -3,8 +3,9 @@ import * as http from "http";
 import * as util from "util";
 
 import * as app from "./app";
+import { Logger } from "./logger/logger";
 
-console.log(util.inspect(config));
+Logger.getLogger().info(util.inspect(config));
 
 const port = normalizePort(process.env.PORT || config.get("listenPort") || "3000");
 const server = http.createServer(app);
@@ -45,5 +46,5 @@ function onError(error) {
 function onListening() {
     const addr = server.address();
     const bind = typeof addr === "string" ? `pipe  ${addr}` : `port ${addr.port}`;
-    console.log("Listening on " + bind);
+    Logger.getLogger().info("Listening on " + bind);
 }
