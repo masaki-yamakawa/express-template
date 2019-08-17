@@ -16,26 +16,26 @@ export class ConnectionWrapper {
     }
 
     public async commit(): Promise<void> {
-        await promisify(this.connection.commit).bind(this.connection)();
+        promisify(this.connection.conn.commit).bind(this.connection.conn)();
     }
 
     public async rollback(): Promise<void> {
-        await promisify(this.connection.rollback).bind(this.connection)();
+        promisify(this.connection.conn.rollback).bind(this.connection.conn)();
     }
 
     public async setAutoCommit(autoCommit: boolean): Promise<void> {
-        await promisify(this.connection.setAutoCommit).bind(this.connection)(autoCommit);
+        promisify(this.connection.conn.setAutoCommit).bind(this.connection.conn)(autoCommit);
     }
 
     public async getAutoCommit(): Promise<boolean> {
-        return await promisify(this.connection.getAutoCommit).bind(this.connection)();
+        return promisify(this.connection.conn.getAutoCommit).bind(this.connection.conn)();
     }
 
     public async getWarnings(): Promise<any> {
-        return await promisify(this.connection.getWarnings).bind(this.connection)();
+        return promisify(this.connection.conn.getWarnings).bind(this.connection.conn)();
     }
 
     public async clearWarnings(): Promise<void> {
-        await promisify(this.connection.clearWarnings).bind(this.connection)();
+        promisify(this.connection.conn.clearWarnings).bind(this.connection.conn)();
     }
 }
