@@ -38,7 +38,8 @@ export const jdbcSelect: RequestHandler = async (req: Request, res: Response, ne
         const results = await dbQueryRunner.query(sql, params);
         res.json(results);
     } catch (err) {
-        throw new Error(`jdbcSelect failed:${err}`);
+        Logger.getLogger().error("jdbcSelect failed");
+        throw err;
     } finally {
         await connManager.releaseConnection(conn);
     }
