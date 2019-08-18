@@ -26,7 +26,8 @@ export const getContents: RequestHandler = async (req: Request, res: Response, n
         const results: Content[] = await dbQueryRunner.query(sqlAndCond[0], sqlAndCond[1]);
         res.json(results);
     } catch (err) {
-        throw new Error(`getContents failed:${err}`);
+        Logger.getLogger().error("getContents failed");
+        throw err;
     } finally {
         await connManager.releaseConnection(conn);
     }

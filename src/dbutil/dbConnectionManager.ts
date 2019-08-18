@@ -37,7 +37,8 @@ export class DBConnectionManager {
         try {
             await promisify(jdbc.initialize).bind(jdbc)();
         } catch (err) {
-            throw new Error(`JDBC initialize failed. ConnName=${connName}:${err}`);
+            Logger.getLogger().error(`JDBC initialize failed. ConnName=${connName}`);
+            throw err;
         }
         Logger.getLogger().info(`JDBC initialized. ConnName=${connName}, Connection=${inspect(dbConfig)}`);
         this.databases[connName] = jdbc;

@@ -22,13 +22,14 @@ app.use("/app", express.static(path.join(__dirname, "public")));
 app.use("/api/v1", router);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-    next(createError(404));
+    throw new createError.NotFound(`Path not found:${req.path}`);
 });
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get("env") === "development" ? err : {};
-    res.status(500).json(err.message);
+    const status: number = (err as any).statusCode ? (err as any).statusCode : 500;
+    const stack = (err as any).stack ? (err as any).stack : "";
+    Logger.getLogger().error(`name=${err.name}, status=${status}, message=${err.message}, stack=${stack}`);
+    res.status(status).json({ name: err.name, message: err.message });
 });
 
 Logger.getLogger().info(listEndpoints(app));
