@@ -20,6 +20,7 @@
         "jdbc": "^0.6.4"
     },
     "devDependencies": {
+        "@types/bunyan": "^1.8.6",
         "@types/config": "0.0.34",
         "@types/express": "^4.17.0",
         "@types/express-validator": "^3.0.0",

@@ -5,6 +5,7 @@ import * as listEndpoints from "express-list-endpoints";
 import * as createError from "http-errors";
 import * as path from "path";
 
+import { loggingHandler} from "./handler/loggingHandler";
 import { Logger } from "./logger/logger";
 import router from "./routes/index";
 
@@ -18,6 +19,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.disable("x-powered-by");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(loggingHandler);
+
 app.use("/app", express.static(path.join(__dirname, "public")));
 app.use("/api/v1", router);
 
