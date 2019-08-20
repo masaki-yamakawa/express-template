@@ -17,6 +17,11 @@
             }
         }
     },
+    "authConfig": {
+        "enabled": true,
+        "secretKey": "ThisIsExpressTemplate",
+        "expire": "1h"
+    },
     "logConfig": {
         "console": {
             "level": "debug"
