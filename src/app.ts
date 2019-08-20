@@ -5,7 +5,7 @@ import * as listEndpoints from "express-list-endpoints";
 import * as createError from "http-errors";
 import * as path from "path";
 
-import { loggingHandler} from "./handler/loggingHandler";
+import { loggingHandler } from "./handler/loggingHandler";
 import { Logger } from "./logger/logger";
 import router from "./routes/index";
 

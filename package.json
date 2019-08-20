@@ -17,7 +17,8 @@
         "express-list-endpoints": "^4.0.1",
         "express-validator": "^6.1.1",
         "http-errors": "~1.6.3",
-        "jdbc": "^0.6.4"
+        "jdbc": "^0.6.4",
+        "jsonwebtoken": "^8.5.1"
     },
     "devDependencies": {
         "@types/bunyan": "^1.8.6",
