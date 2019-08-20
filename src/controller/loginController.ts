@@ -26,5 +26,6 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
 
     const authConfig: any = config.get("authConfig");
     const token = await jwt.sign({ user }, authConfig.secretKey, { expiresIn: authConfig.expire });
-    res.json({ token });
+    res.setHeader("Authorization", token);
+    res.sendStatus(200);
 };
