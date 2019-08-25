@@ -12,7 +12,7 @@
                 "minpoolsize": 5,
                 "maxpoolsize": 10,
                 "user": "user",
-                "password": "password",
+                "password": "decrypt(6f50f2b927c11040)",
                 "properties": {}
             }
         }
