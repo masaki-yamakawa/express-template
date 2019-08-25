@@ -6,6 +6,7 @@ import { inspect, promisify } from "util";
 import { Logger } from "../logger/logger";
 
 import { ConnectionWrapper } from "./connectionWrapper";
+import { decrypt } from "./crypto";
 
 export class DBConnectionManager {
     public static getInstance(): DBConnectionManager {
@@ -33,7 +34,15 @@ export class DBConnectionManager {
             return;
         }
 
-        const jdbc = new JDBC(dbConfig);
+        const newConfig = JSON.parse(JSON.stringify(dbConfig));
+        if (dbConfig.password) {
+            const regexp = /(?<=decrypt\().+?(?=\))/;
+            const encryptedPw = dbConfig.password.match(regexp);
+            if (encryptedPw && encryptedPw[0]) {
+                newConfig.password = decrypt(encryptedPw[0]);
+            }
+        }
+        const jdbc = new JDBC(newConfig);
         try {
             await promisify(jdbc.initialize).bind(jdbc)();
         } catch (err) {

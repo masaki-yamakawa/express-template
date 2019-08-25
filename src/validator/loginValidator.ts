@@ -1,4 +1,4 @@
-import { check, ValidationChain } from "express-validator/check";
+import { check, ValidationChain } from "express-validator";
 
 export const loginRequestValidator: ValidationChain[] = [
     check("userId").isString().isLength({ min: 1, max: 20 }),
