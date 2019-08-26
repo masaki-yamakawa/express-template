@@ -6,6 +6,7 @@ import { echoMessage } from "../controller/echoMessage";
 import { jdbcSelect } from "../controller/jdbcAccess";
 import { postLogs } from "../controller/logController";
 import { login } from "../controller/loginController";
+import { getXmlContents } from "../controller/xmlContentController";
 import { asyncHandler } from "../handler/asyncHandler";
 import { authenticateHandler } from "../handler/authenticateHandler";
 import { validationHandler } from "../handler/validationHandler";
@@ -21,6 +22,7 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
 router.post("/login", loginRequestValidator, validationHandler, asyncHandler(login));
 
 router.get("/content", validationHandler, authenticateHandler, asyncHandler(getContents));
+router.get("/xmlContent", validationHandler, asyncHandler(getXmlContents));
 router.get("/echo", echoRequestValidator, validationHandler, asyncHandler(echoMessage));
 router.get("/jdbc", jdbcSelectRequestValidator, validationHandler, asyncHandler(jdbcSelect));
 router.post("/log", validationHandler, asyncHandler(postLogs));
