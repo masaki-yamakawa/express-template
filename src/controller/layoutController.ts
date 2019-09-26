@@ -124,7 +124,7 @@ const buildSql = (conditions: Map<string, any>): string => {
 };
 
 const convertProtocol = (layouts: Layout[]): GetLayoutResponse => {
-    if (Layout.length === 0) {
+    if (layouts.length === 0) {
         return null;
     }
 
