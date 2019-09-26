@@ -1,5 +1,7 @@
 import { promisify } from "util";
 
+import { Logger } from "../logger/logger";
+
 export class ConnectionWrapper {
     private readonly connection;
 
@@ -17,10 +19,12 @@ export class ConnectionWrapper {
 
     public async commit(): Promise<void> {
         promisify(this.connection.conn.commit).bind(this.connection.conn)();
+        Logger.getLogger().info(`Commit connection=${this.connection.uuid}`);
     }
 
     public async rollback(): Promise<void> {
         promisify(this.connection.conn.rollback).bind(this.connection.conn)();
+        Logger.getLogger().info(`Rollback connection=${this.connection.uuid}`);
     }
 
     public async setAutoCommit(autoCommit: boolean): Promise<void> {
