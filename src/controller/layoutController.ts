@@ -49,7 +49,7 @@ export const postLayouts: RequestHandler = async (req: Request, res: Response, n
                 null);
             await dbQueryRunner.update(
                 "INSERT INTO Layout(owner, name, version, belonging, shareWith, layout, saveDateTime) " +
-                "VALUES(${owner}, ${name}, ${version}, ${group}, ${shareWith}, ${layout}, NOW())",
+                "VALUES(${owner}, ${name}, ${version}, ${belonging}, ${shareWith}, ${layout}, NOW())",
                 new Map(Object.entries(layout)));
         }
         await conn.commit();
@@ -77,7 +77,9 @@ export const getLayouts: RequestHandler = async (req: Request, res: Response, ne
     let conn: ConnectionWrapper = null;
     try {
         const condMap: Map<string, any> = new Map();
-        condMap.set("owner", condition.owner);
+        if (condition.owner) {
+            condMap.set("owner", condition.owner);
+        }
         if (condition.group) {
             condMap.set("group", condition.group);
         }
@@ -140,7 +142,7 @@ const convertProtocol = (layouts: Layout[]): GetLayoutResponse => {
     }
     const response: GetLayoutResponse = {
         owner: layouts[0].owner,
-        group: layouts[0].group,
+        group: layouts[0].belonging,
         layouts: layoutProtocols,
     };
     return response;

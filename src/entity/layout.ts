@@ -3,7 +3,7 @@ export class Layout {
     public owner: string;
     public name: string;
     public version: number;
-    public group: string;
+    public belonging: string;
     public shareWith: "None" | "Group" | "All";
     public layout: string;
     public saveDateTime: string;
@@ -13,7 +13,7 @@ export class Layout {
         owner: string,
         name: string,
         version: number,
-        group: string,
+        belonging: string,
         shareWith: "None" | "Group" | "All",
         layout: string,
         saveDateTime: string,
@@ -22,7 +22,7 @@ export class Layout {
         this.owner = owner;
         this.name = name;
         this.version = version;
-        this.group = group;
+        this.belonging = belonging;
         this.shareWith = shareWith;
         this.layout = layout;
         this.saveDateTime = saveDateTime;
