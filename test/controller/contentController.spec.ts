@@ -41,8 +41,8 @@ describe("getContents: database is empty", () => {
     });
 
     it("should return empty array if database is empty", async () => {
-        const logs = {};
-        const req: any = mockRequest(logs);
+        const cond = {};
+        const req: any = mockRequest(cond);
         const res: any = mockResponse();
 
         await getContents(req, res, () => { });
