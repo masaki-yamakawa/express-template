@@ -77,13 +77,13 @@ export const getLayouts: RequestHandler = async (req: Request, res: Response, ne
     let conn: ConnectionWrapper = null;
     try {
         const condMap: Map<string, any> = new Map();
-        if (condition.owner) {
+        if (condition.owner !== undefined) {
             condMap.set("owner", condition.owner);
         }
-        if (condition.group) {
-            condMap.set("group", condition.group);
+        if (condition.group !== undefined) {
+            condMap.set("belonging", condition.group);
         }
-        if (condition.shareWith) {
+        if (condition.shareWith !== undefined) {
             condMap.set("shareWith", condition.shareWith);
         }
         const sql: string = buildSql(condMap);
@@ -125,25 +125,30 @@ const buildSql = (conditions: Map<string, any>): string => {
     return sql;
 };
 
-const convertProtocol = (layouts: Layout[]): GetLayoutResponse => {
+const convertProtocol = (layouts: Layout[]): GetLayoutResponse[] => {
     if (layouts.length === 0) {
         return null;
     }
 
-    const layoutProtocols: LayoutProtocol[] = [];
+    const map: Map<string, GetLayoutResponse> = new Map();
     for (const layout of layouts) {
+        let response: GetLayoutResponse = map.get(layout.owner);
+        if (!response) {
+            response = {
+                owner: layout.owner,
+                group: layout.belonging,
+                layouts: [],
+            };
+        }
         const layoutProtocol: LayoutProtocol = {
             id: layout.id,
             name: layout.name,
             shareWith: layout.shareWith,
             layout: layout.layout,
         };
-        layoutProtocols.push(layoutProtocol);
+        response.layouts.push(layoutProtocol);
+
+        map.set(layout.owner, response);
     }
-    const response: GetLayoutResponse = {
-        owner: layouts[0].owner,
-        group: layouts[0].belonging,
-        layouts: layoutProtocols,
-    };
-    return response;
+    return Array.from(map.values());
 };

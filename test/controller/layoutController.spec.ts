@@ -291,12 +291,14 @@ describe("getLayouts: database has rows", () => {
         const layout4: Layout = new Layout(null, "user1", "layoutName1", 2, "group1", "None", "layout4", null);
         const layout5: Layout = new Layout(null, "user2", "layoutName2", 2, "group1", "None", "layout5", null);
         const layout6: Layout = new Layout(null, "user2", "layoutName2", 3, "group1", "Group", "layout6", null);
+        const layout7: Layout = new Layout(null, "user2", "layoutName7", 1, "group1", "None", "layout7", null);
         layouts.push(layout1);
         layouts.push(layout2);
         layouts.push(layout3);
         layouts.push(layout4);
         layouts.push(layout5);
         layouts.push(layout6);
+        layouts.push(layout7);
         for (const layout of layouts) {
             await dbQueryRunner.update(
                 "INSERT INTO Layout(owner, name, version, belonging, shareWith, layout, saveDateTime) " +
@@ -312,15 +314,30 @@ describe("getLayouts: database has rows", () => {
         const res: any = mockResponse();
 
         await getLayouts(req, res, () => { });
-        expect(res.json).toHaveBeenCalledWith({
-            owner: "user3",
-            group: "group2",
-            layouts: [
-                { id: expect.anything(), name: "layoutName3", shareWith: "All", layout: "layout3" },
-                { id: expect.anything(), name: "layoutName1", shareWith: "None", layout: "layout4" },
-                { id: expect.anything(), name: "layoutName2", shareWith: "Group", layout: "layout6" },
-            ],
-        });
+        expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
+            {
+                owner: "user1",
+                group: "group1",
+                layouts: [
+                    { id: expect.anything(), name: "layoutName1", shareWith: "None", layout: "layout4" },
+                ],
+            },
+            {
+                owner: "user2",
+                group: "group1",
+                layouts: [
+                    { id: expect.anything(), name: "layoutName2", shareWith: "Group", layout: "layout6" },
+                    { id: expect.anything(), name: "layoutName7", shareWith: "None", layout: "layout7" },
+                ],
+            },
+            {
+                owner: "user3",
+                group: "group2",
+                layouts: [
+                    { id: expect.anything(), name: "layoutName3", shareWith: "All", layout: "layout3" },
+                ],
+            },
+        ]));
     });
 
     it("should return entities that matches condition if condition is specified:condition=1", async () => {
@@ -329,13 +346,13 @@ describe("getLayouts: database has rows", () => {
         const res: any = mockResponse();
 
         await getLayouts(req, res, () => { });
-        expect(res.json).toHaveBeenCalledWith({
+        expect(res.json).toHaveBeenCalledWith([{
             owner: "user3",
             group: "group2",
             layouts: [
                 { id: expect.anything(), name: "layoutName3", shareWith: "All", layout: "layout3" },
             ],
-        });
+        }]);
     });
 
     it("should return entities that matches condition if condition is specified:condition=2", async () => {
@@ -344,21 +361,31 @@ describe("getLayouts: database has rows", () => {
         const res: any = mockResponse();
 
         await getLayouts(req, res, () => { });
-        expect(res.json).toHaveBeenCalledWith({
+        expect(res.json).toHaveBeenCalledWith([{
             owner: "user2",
             group: "group1",
             layouts: [
                 { id: expect.anything(), name: "layoutName2", shareWith: "Group", layout: "layout6" },
             ],
-        });
+        }]);
     });
 
-    it("should return null if not matches condition", async () => {
-        const queryParams = { owner: "user2", shareWith: "None" };
+    it("should add empty conditions  if specified condition is empty", async () => {
+        const queryParams = { owner: "", group: "", shareWith: "" };
         const req: any = mockGetRequest(queryParams);
         const res: any = mockResponse();
 
         await getLayouts(req, res, () => { });
         expect(res.json).toHaveBeenCalledWith(null);
     });
+
+    it("should return null if not matches condition", async () => {
+        const queryParams = { owner: "user2", shareWith: "All" };
+        const req: any = mockGetRequest(queryParams);
+        const res: any = mockResponse();
+
+        await getLayouts(req, res, () => { });
+        expect(res.json).toHaveBeenCalledWith(null);
+    });
+
 });
