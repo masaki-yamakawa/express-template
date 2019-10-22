@@ -83,7 +83,7 @@ export class DBConnectionManager {
             if (!isClosed) {
                 break;
             }
-            Logger.getLogger().info(`Connection is closed, try to get next connection. isClosed=${isClosed}`);
+            Logger.getLogger().info(`Connection is closed, try to get next connection. connection=${connWrapper.getUuid()}, isClosed=${isClosed}`);
             await this.releaseConnection(connWrapper.getConnection(), connName);
         }
         Logger.getLogger().info(`Using connection=${connWrapper.getUuid()}, autoCommit=${autoCommit}`);
