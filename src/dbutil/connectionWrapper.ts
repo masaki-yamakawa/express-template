@@ -42,4 +42,12 @@ export class ConnectionWrapper {
     public async clearWarnings(): Promise<void> {
         promisify(this.connection.conn.clearWarnings).bind(this.connection.conn)();
     }
+
+    public async isClosed(): Promise<boolean> {
+        return promisify(this.connection.conn.isClosed).bind(this.connection.conn)();
+    }
+
+    public async close(): Promise<boolean> {
+        return promisify(this.connection.conn.close).bind(this.connection.conn)();
+    }
 }
