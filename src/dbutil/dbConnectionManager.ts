@@ -18,6 +18,7 @@ export class DBConnectionManager {
     private static instance: DBConnectionManager;
 
     private databases: { [key: string]: any; } = {};
+    private config = null;
 
     private constructor() {
         if (!jinst.isJvmCreated()) {
@@ -51,6 +52,7 @@ export class DBConnectionManager {
         }
         Logger.getLogger().info(`JDBC initialized. ConnName=${connName}, Connection=${inspect(dbConfig)}`);
         this.databases[connName] = jdbc;
+        this.config = newConfig;
     }
 
     public isInitialized(connName: string = "default"): boolean {
@@ -71,9 +73,19 @@ export class DBConnectionManager {
         if (!this.isInitialized(connName)) {
             throw new Error(`DBConnectionManager not initialized. ConnName=${connName}`);
         }
-        const connection = await promisify(this.databases[connName].reserve).bind(this.databases[connName])();
-        const connWrapper: ConnectionWrapper = new ConnectionWrapper(connection);
-        await connWrapper.setAutoCommit(autoCommit);
+        let connWrapper: ConnectionWrapper = null;
+        const retryMax: number = this.config.maxpoolsize ? this.config.maxpoolsize : 1;
+        for (let i = 0; i < retryMax; i++) {
+            const connection = await promisify(this.databases[connName].reserve).bind(this.databases[connName])();
+            connWrapper = new ConnectionWrapper(connection);
+            await connWrapper.setAutoCommit(autoCommit);
+            const isClosed: boolean = await connWrapper.isClosed();
+            if (!isClosed) {
+                break;
+            }
+            Logger.getLogger().info(`Connection is closed, try to get next connection. isClosed=${isClosed}`);
+            await this.releaseConnection(connWrapper.getConnection(), connName);
+        }
         Logger.getLogger().info(`Using connection=${connWrapper.getUuid()}, autoCommit=${autoCommit}`);
         return connWrapper;
     }

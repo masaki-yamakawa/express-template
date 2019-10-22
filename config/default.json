@@ -11,6 +11,7 @@
                 "drivername": "com.mysql.jdbc.Driver",
                 "minpoolsize": 5,
                 "maxpoolsize": 10,
+                "maxidle" : 300000,
                 "user": "user",
                 "password": "decrypt(6f50f2b927c11040)",
                 "properties": {}
