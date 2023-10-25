@@ -18,7 +18,7 @@
         "express-list-endpoints": "^4.0.1",
         "express-validator": "^6.1.1",
         "http-errors": "~1.6.3",
-        "jdbc": "^0.6.4",
+        "jdbc": "^0.7.6",
         "jsonwebtoken": "^9.0.0"
     },
     "devDependencies": {
